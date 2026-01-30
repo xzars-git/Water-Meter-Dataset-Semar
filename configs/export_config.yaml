@@ -1,0 +1,92 @@
+# ============================================================================
+# Water Meter AI - Export Configuration
+# For Mobile Deployment (Flutter TFLite)
+# ============================================================================
+
+# Export Settings
+export:
+  # Input model
+  weights: "runs/train/exp/weights/best.pt"
+
+  # Output formats
+  formats:
+    - "onnx" # Intermediate format
+    - "tflite" # Target format for mobile
+
+  # Export directory
+  output_dir: "exports/"
+
+  # Model optimization
+  optimization:
+    simplify: true # ONNX graph simplification
+    optimize_for_mobile: true
+
+  # Quantization (Critical for mobile deployment)
+  quantization:
+    enabled: true
+    type: "int8" # INT8 quantization
+    calibration_images: 100 # Number of images for calibration
+
+  # Input specifications
+  input:
+    image_size: [512, 512]
+    dynamic_batch: false # Fixed batch size for mobile
+
+  # ONNX specific
+  onnx:
+    opset_version: 12
+    dynamic_axes: false
+
+  # TFLite specific
+  tflite:
+    # Optimization flags
+    optimizations:
+      - "DEFAULT" # Standard optimizations
+
+    # Representative dataset for quantization
+    representative_dataset:
+      enabled: true
+      num_samples: 100
+      source: "valid" # Use validation set
+
+    # Supported ops
+    supported_ops:
+      - "TFLITE_BUILTINS" # Standard TFLite ops
+      - "SELECT_TF_OPS" # Additional TF ops if needed
+
+    # Target specs for mobile
+    target_spec:
+      supported_types:
+        - "int8"
+
+  # Validation after export
+  validation:
+    enabled: true
+    test_images: 10
+    compare_outputs: true # Compare with original PyTorch model
+    tolerance: 0.01 # Maximum allowed difference
+
+# Performance Targets
+targets:
+  model_size_mb: 10 # Target model size
+  inference_time_ms: 100 # Target inference time on mobile
+  accuracy_drop_max: 0.02 # Maximum allowed accuracy drop (2%)
+
+# Metadata (embedded in model)
+metadata:
+  author: "Arsenius Purbandono"
+  description: "Water Meter Digit Detection - OBB"
+  version: "1.0.0"
+  input_shape: [1, 512, 512, 3]
+  output_shape: "variable" # Depends on detections
+  classes:
+    - "0"
+    - "1"
+    - "2"
+    - "3"
+    - "4"
+    - "5"
+    - "6"
+    - "7"
+    - "8"
+    - "9"
