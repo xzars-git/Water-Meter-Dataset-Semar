@@ -11,7 +11,7 @@ save: true
 save_period: -1
 cache: false
 device: '0'
-workers: 12
+workers: 8
 project: water-meter-ai
 name: exp
 exist_ok: true
@@ -92,7 +92,7 @@ scale: 0.5
 shear: 10.0
 perspective: 0.0
 flipud: 0.0
-fliplr: 0.5
+fliplr: 0.0
 bgr: 0.0
 mosaic: 1.0
 mixup: 0.0

@@ -12,8 +12,8 @@ model:
 data:
   yaml_path: "data.yaml"
   img_size: 512
-  cache: true
-  workers: 12
+  cache: false # Disabled to keep RAM under 85% (~26GB limit)
+  workers: 8 # Reduced from 12 to lower RAM usage
 
 training:
   epochs: 100
@@ -40,8 +40,8 @@ augmentation:
   scale: 0.5
   shear: 10.0
   perspective: 0.0
-  flipud: 0.0
-  fliplr: 0.5
+  flipud: 0.0 # Vertical flip (disabled for digits)
+  fliplr: 0.0 # Horizontal flip (DISABLED - would confuse 6/9)
   mosaic: 1.0
   mixup: 0.0
   copy_paste: 0.0

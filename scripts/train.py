@@ -76,6 +76,7 @@ def main():
         # Data
         'data': config.get('data.yaml_path'),
         'imgsz': config.get('data.img_size', 512),
+        'cache': config.get('data.cache', False),
         
         # Training
         'epochs': config.get('training.epochs', 100),
@@ -89,6 +90,16 @@ def main():
         'momentum': config.get('training.momentum', 0.937),
         'weight_decay': config.get('training.weight_decay', 0.0005),
         
+        # Loss gains
+        'box': config.get('training.box', 7.5),
+        'cls': config.get('training.cls', 0.5),
+        'dfl': config.get('training.dfl', 1.5),
+        
+        # Warmup
+        'warmup_epochs': config.get('training.warmup_epochs', 3.0),
+        'warmup_momentum': config.get('training.warmup_momentum', 0.8),
+        'warmup_bias_lr': config.get('training.warmup_bias_lr', 0.1),
+        
         # Augmentation
         'hsv_h': config.get('augmentation.hsv_h', 0.015),
         'hsv_s': config.get('augmentation.hsv_s', 0.7),
@@ -97,9 +108,12 @@ def main():
         'translate': config.get('augmentation.translate', 0.1),
         'scale': config.get('augmentation.scale', 0.5),
         'shear': config.get('augmentation.shear', 10.0),
+        'perspective': config.get('augmentation.perspective', 0.0),
         'flipud': config.get('augmentation.flipud', 0.0),
-        'fliplr': config.get('augmentation.fliplr', 0.5),
+        'fliplr': config.get('augmentation.fliplr', 0.0),  # DISABLED for digit recognition!
         'mosaic': config.get('augmentation.mosaic', 1.0),
+        'mixup': config.get('augmentation.mixup', 0.0),
+        'copy_paste': config.get('augmentation.copy_paste', 0.0),
         
         # Hardware
         'device': args.device or config.get('hardware.device', ''),
@@ -134,10 +148,13 @@ def main():
         logger.info("Training completed successfully!")
         logger.info(f"Best weights saved at: {model.trainer.best}")
         
-        # Log final metrics
+        # Log final metrics (OBB uses different metric keys)
         logger.info("Final Metrics:")
-        logger.info(f"  mAP50: {results.results_dict.get('metrics/mAP50(B)', 'N/A')}")
-        logger.info(f"  mAP50-95: {results.results_dict.get('metrics/mAP50-95(B)', 'N/A')}")
+        # Try OBB metrics first, fall back to standard detection metrics
+        mAP50 = results.results_dict.get('metrics/mAP50(OBB)') or results.results_dict.get('metrics/mAP50(B)', 'N/A')
+        mAP50_95 = results.results_dict.get('metrics/mAP50-95(OBB)') or results.results_dict.get('metrics/mAP50-95(B)', 'N/A')
+        logger.info(f"  mAP50: {mAP50}")
+        logger.info(f"  mAP50-95: {mAP50_95}")
         
     except Exception as e:
         logger.error(f"Training failed: {str(e)}")
