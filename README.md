@@ -55,25 +55,39 @@ Water-Meter-Dataset/
 │       ├── utils/                  # Video I/O, helpers
 │       └── preprocessing/          # Enhancement (placeholder)
 │
-├── 🎓 training/                    # Training System
+├── 🎓 training/                    # Training System (Complete)
 │   ├── training_dashboard.py      # Monitor training
-│   ├── configs/                    # YAML configs
-│   ├── scripts/
+│   ├── scripts/                    # Training scripts
 │   │   ├── train.py               # Main training
 │   │   ├── export.py              # Model export
 │   │   └── resplit_dataset.py    # Dataset splitting
+│   ├── configs/                    # YAML configs
+│   │   ├── train_config.yaml      # Training config
+│   │   └── export_config.yaml     # Export config
 │   ├── notebooks/                  # Jupyter notebooks
-│   └── runs/                       # Training outputs
+│   │   ├── 02_training_local.ipynb
+│   │   └── 03_training_colab.ipynb
+│   ├── runs/                       # Training outputs
+│   ├── logs/                       # Log files
+│   ├── requirements.txt            # Training dependencies
+│   └── README.md                   # Training docs
 │
-├── 📊 Dataset
+├── 📊 Dataset                      # YOLO Dataset
 │   ├── data.yaml                   # Dataset config
-│   ├── train/                      # 80% training
-│   ├── valid/                      # 15% validation
-│   └── test/                       # 5% test
+│   ├── train/                      # 80% training images
+│   ├── valid/                      # 15% validation images
+│   └── test/                       # 5% test images
 │
-└── 🔧 Shared
-    ├── src/utils/                  # Config, logging
-    └── requirements.txt            # Base dependencies
+├── 🔧 Shared Resources
+│   ├── src/utils/                  # Config, logging utilities
+│   ├── assets/                     # Shared assets
+│   ├── deployment/                 # Deployment configs
+│   ├── requirements.txt            # Base dependencies
+│   └── setup.py                    # Package setup
+│
+└── 📦 Model Files
+    ├── yolo11n.pt                  # YOLO11 base model
+    └── yolov8s-obb.pt             # YOLOv8 OBB base model
 ```
 
 ---
