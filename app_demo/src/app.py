@@ -415,29 +415,23 @@ with gr.Blocks(title="Water Meter AI Detection") as demo:
         with gr.Tab("🎥 Video Analysis"):
             gr.Markdown("### Track and analyze water meters in video footage", elem_classes="markdown-text")
             
-            with gr.Row(equal_height=True, elem_classes="split-panel-row"):
+            with gr.Row(equal_height=False, elem_classes="split-panel-row"):
                 # Left Column: Input
                 with gr.Column(scale=1, elem_classes="group-container"):
                     gr.Markdown("#### 📤 Upload Video", elem_classes="markdown-text")
                     video_input = gr.Video(
                         label="Input Video",
-                        height=400
-                    )
-                    video_process_btn = gr.Button(
-                        "🎬 Start Tracking",
-                        variant="primary",
-                        size="lg"
+                        height=450
                     )
                     gr.Markdown(
                         """
                         **Video Processing Features:**
-                        - Multi-object tracking across frames
-                        - Temporal smoothing for stable readings
+                        - Frame-by-frame water meter detection
+                        - Left-to-right digit sorting
+                        - Real-time reading overlay
                         - Support for MP4, AVI, MOV formats
-                        - Frame-by-frame annotation
                         
-                        **Note:** Processing time depends on video length.
-                        A 30-second video typically takes 1-2 minutes.
+                        **Note:** Processing time ~1.5x video duration.
                         """,
                         elem_classes="markdown-text"
                     )
@@ -447,18 +441,27 @@ with gr.Blocks(title="Water Meter AI Detection") as demo:
                     gr.Markdown("#### 📹 Processed Output", elem_classes="markdown-text")
                     video_output = gr.Video(
                         label="Processed Video Output",
-                        height=400
+                        height=450
                     )
                     gr.Markdown(
                         """
                         **Output Includes:**
                         - Bounding boxes on detected meters
-                        - Tracking IDs for each meter
-                        - Real-time reading overlay
-                        - Confidence scores per detection
+                        - Sorted reading display (left-to-right)
+                        - Confidence scores per digit
+                        - H.264 format (browser playable)
                         """,
                         elem_classes="markdown-text"
                     )
+            
+            # Processing button (full width)
+            with gr.Row():
+                video_process_btn = gr.Button(
+                    "🎬 Start Processing",
+                    variant="primary",
+                    size="lg",
+                    scale=1
+                )
             
             # Wire up the logic
             video_process_btn.click(

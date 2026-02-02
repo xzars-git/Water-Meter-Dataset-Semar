@@ -14,6 +14,9 @@ Status: PRODUCTION MODE with Left-to-Right Digit Sorting
 
 import time
 import json
+import tempfile
+import subprocess
+import shutil
 from typing import List, Tuple, Dict, Any, Optional, Union
 from pathlib import Path
 
@@ -322,12 +325,40 @@ class WaterMeterSystem:
             img_array = np.array(image)
             
             # Run YOLO inference with lower confidence threshold
-            results = self.model.predict(source=img_array, conf=0.10, verbose=False)
+            results = self.model.predict(source=img_array, conf=0.05, verbose=False)
             
             # Extract and sort detections (left-to-right)
             detections = []
             
-            if len(results) > 0 and results[0].boxes is not None and len(results[0].boxes) > 0:
+            # Check if model is OBB type (Oriented Bounding Box)
+            if len(results) > 0 and hasattr(results[0], 'obb') and results[0].obb is not None and len(results[0].obb) > 0:
+                # OBB Model: Use xyxyxyxy (4 corners)
+                for obb in results[0].obb:
+                    # Get rotated bounding box coordinates (4 corners: xyxyxyxy)
+                    xyxyxyxy = obb.xyxyxyxy[0].cpu().numpy()  # Shape: (4, 2)
+                    
+                    # Extract x and y coordinates from all 4 corners
+                    x_coords = xyxyxyxy[:, 0]
+                    y_coords = xyxyxyxy[:, 1]
+                    
+                    # Get axis-aligned bounding box (min/max)
+                    x1, y1 = float(x_coords.min()), float(y_coords.min())
+                    x2, y2 = float(x_coords.max()), float(y_coords.max())
+                    x_center = (x1 + x2) / 2
+                    
+                    # Get class info
+                    cls_id = int(obb.cls[0])
+                    class_name = self.model.names[cls_id]
+                    conf = float(obb.conf[0])
+                    
+                    detections.append({
+                        "class": class_name,
+                        "x_center": x_center,
+                        "bbox": [int(x1), int(y1), int(x2), int(y2)],
+                        "conf": conf
+                    })
+            elif len(results) > 0 and results[0].boxes is not None and len(results[0].boxes) > 0:
+                # Regular Detection Model: Use boxes
                 for box in results[0].boxes:
                     x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
                     cls_id = int(box.cls[0])
@@ -344,8 +375,14 @@ class WaterMeterSystem:
             # Sort by x_center (left-to-right)
             detections.sort(key=lambda x: x['x_center'])
             
-            # Concatenate to form final reading
-            final_reading = "".join([d['class'] for d in detections])
+            # Filter only digit classes and concatenate to form final reading
+            digit_readings = []
+            for d in detections:
+                if d['class'].startswith('digit_'):
+                    digit = d['class'].replace('digit_', '')
+                    digit_readings.append(digit)
+            
+            final_reading = "".join(digit_readings)
             
             # Calculate average confidence
             avg_confidence = np.mean([d['conf'] for d in detections]) if detections else 0.0
@@ -418,33 +455,125 @@ class WaterMeterSystem:
         video_path: str
     ) -> str:
         """
-        Process video file for water meter detection and tracking.
+        Process video file for water meter detection with left-to-right digit sorting.
         
         Args:
             video_path (str): Path to input video file
         
         Returns:
-            str: Path to processed video (currently returns input path in mock mode)
-        
-        TODO: Implement YOLOv8 Tracking logic here later
-        - Load video with cv2.VideoCapture
-        - Run YOLO inference on each frame
-        - Apply tracking algorithm
-        - Draw bounding boxes and IDs
-        - Save processed video
-        - Return path to processed video
+            str: Path to processed video file
         """
         print(f"Processing video: {video_path}")
-        print("⚠️  MOCK MODE: Returning original video without processing")
         
-        # Simulate processing delay
-        time.sleep(1.0)
+        # Open video
+        cap = cv2.VideoCapture(video_path)
+        if not cap.isOpened():
+            print(f"❌ Error: Cannot open video file: {video_path}")
+            return video_path
         
-        # TODO: Implement YOLOv8 Tracking logic here later
-        # For now, just return the input video path (pass-through)
-        # This allows testing the UI video player
+        # Get video properties
+        fps = int(cap.get(cv2.CAP_PROP_FPS))
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         
-        return video_path
+        print(f"📹 Video: {width}x{height} @ {fps} FPS, {total_frames} frames")
+        
+        # Create output video path in system temp directory (Gradio-approved)
+        input_path = Path(video_path)
+        
+        # Create temp directory for processed videos
+        temp_dir = Path(tempfile.gettempdir()) / "water_meter_videos"
+        temp_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Generate unique output filename with timestamp
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        output_filename = f"{input_path.stem}_processed_{timestamp}.mp4"
+        output_path = temp_dir / output_filename
+        
+        print(f"💾 Output will be saved to: {output_path}")
+        
+        # Use mp4v codec for initial write (most compatible with OpenCV)
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        temp_output = output_path.with_suffix('.temp.mp4')
+        out = cv2.VideoWriter(str(temp_output), fourcc, fps, (width, height))
+        
+        if not out.isOpened():
+            print("❌ Error: Could not initialize video writer")
+            cap.release()
+            return video_path
+        
+        frame_count = 0
+        start_time = time.time()
+        
+        try:
+            while True:
+                ret, frame = cap.read()
+                if not ret:
+                    break
+                
+                # Process frame using predict_webcam (which has OBB logic)
+                annotated_frame = self.predict_webcam(frame)
+                
+                # Write frame
+                out.write(annotated_frame)
+                
+                frame_count += 1
+                if frame_count % 30 == 0:  # Progress every 30 frames
+                    progress = (frame_count / total_frames) * 100
+                    print(f"⏳ Progress: {frame_count}/{total_frames} ({progress:.1f}%)")
+        
+        finally:
+            cap.release()
+            out.release()
+        
+        elapsed_time = time.time() - start_time
+        print(f"✅ Video processing complete (temp): {temp_output}")
+        print(f"⏱️  Processing time: {elapsed_time:.2f}s ({frame_count/elapsed_time:.1f} FPS)")
+        
+        # Convert to H.264 with FFmpeg for browser compatibility
+        print(f"🔄 Converting to H.264 format for browser playback...")
+        try:
+            # Try to use imageio-ffmpeg (bundled FFmpeg)
+            try:
+                import imageio_ffmpeg
+                ffmpeg_exe = imageio_ffmpeg.get_ffmpeg_exe()
+                print(f"✅ Using bundled FFmpeg: {ffmpeg_exe}")
+            except ImportError:
+                # Fallback to system FFmpeg
+                ffmpeg_exe = shutil.which('ffmpeg')
+                if ffmpeg_exe:
+                    print(f"✅ Using system FFmpeg: {ffmpeg_exe}")
+                else:
+                    print("⚠️ FFmpeg not found, using mp4v codec (may not play in browser)")
+                    print("   Install with: pip install imageio-ffmpeg")
+                    temp_output.rename(output_path)
+                    return str(output_path)
+            
+            # Convert to H.264
+            result = subprocess.run([
+                ffmpeg_exe, '-y', '-i', str(temp_output),
+                '-c:v', 'libx264', '-preset', 'fast',
+                '-crf', '23', '-pix_fmt', 'yuv420p',
+                '-movflags', '+faststart',  # Enable streaming
+                str(output_path)
+            ], check=True, capture_output=True, text=True)
+            
+            # Remove temp file
+            temp_output.unlink()
+            print(f"✅ H.264 conversion complete: {output_path}")
+            
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️ H.264 conversion failed: {e.stderr}")
+            print("   Using original mp4v file (may not play in browser)")
+            if temp_output.exists():
+                temp_output.rename(output_path)
+        except Exception as e:
+            print(f"⚠️ Unexpected error during conversion: {e}")
+            if temp_output.exists():
+                temp_output.rename(output_path)
+        
+        return str(output_path)
     
     def predict_webcam(
         self, 
@@ -466,12 +595,40 @@ class WaterMeterSystem:
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         
         # Run YOLO inference with lower confidence threshold
-        results = self.model.predict(source=frame_rgb, conf=0.10, verbose=False)
+        results = self.model.predict(source=frame_rgb, conf=0.05, verbose=False)
         
         # Extract and sort detections (left-to-right)
         detections = []
         
-        if len(results) > 0 and results[0].boxes is not None and len(results[0].boxes) > 0:
+        # Check if model is OBB type (Oriented Bounding Box)
+        if len(results) > 0 and hasattr(results[0], 'obb') and results[0].obb is not None and len(results[0].obb) > 0:
+            # OBB Model: Use xyxyxyxy (4 corners)
+            for obb in results[0].obb:
+                # Get rotated bounding box coordinates (4 corners: xyxyxyxy)
+                xyxyxyxy = obb.xyxyxyxy[0].cpu().numpy()  # Shape: (4, 2)
+                
+                # Extract x and y coordinates from all 4 corners
+                x_coords = xyxyxyxy[:, 0]
+                y_coords = xyxyxyxy[:, 1]
+                
+                # Get axis-aligned bounding box (min/max)
+                x1, y1 = float(x_coords.min()), float(y_coords.min())
+                x2, y2 = float(x_coords.max()), float(y_coords.max())
+                x_center = (x1 + x2) / 2
+                
+                # Get class info
+                cls_id = int(obb.cls[0])
+                class_name = self.model.names[cls_id]
+                conf = float(obb.conf[0])
+                
+                detections.append({
+                    "class": class_name,
+                    "x_center": x_center,
+                    "bbox": [int(x1), int(y1), int(x2), int(y2)],
+                    "conf": conf
+                })
+        elif len(results) > 0 and results[0].boxes is not None and len(results[0].boxes) > 0:
+            # Regular Detection Model: Use boxes
             for box in results[0].boxes:
                 x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
                 cls_id = int(box.cls[0])
@@ -488,8 +645,14 @@ class WaterMeterSystem:
         # Sort by x_center (left-to-right)
         detections.sort(key=lambda x: x['x_center'])
         
-        # Concatenate to form final reading
-        final_reading = "".join([d['class'] for d in detections])
+        # Filter only digit classes and concatenate to form final reading
+        digit_readings = []
+        for d in detections:
+            if d['class'].startswith('digit_'):
+                digit = d['class'].replace('digit_', '')
+                digit_readings.append(digit)
+        
+        final_reading = "".join(digit_readings)
         
         # Create annotated frame
         annotated_frame = frame.copy()
