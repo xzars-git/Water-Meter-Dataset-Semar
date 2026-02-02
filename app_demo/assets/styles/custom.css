@@ -1,0 +1,668 @@
+
+/* ============================================
+   GLOBAL: MODERN DARK THEME WITH ROBOTO FONT
+   ============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+}
+
+body, html, .gradio-container, .main, .contain, .app, .wrap {
+    background: linear-gradient(135deg, #0a1929 0%, #0f2744 100%) !important;
+    color: #e2e8f0 !important;
+}
+
+.gradio-container {
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 30px !important;
+    background: transparent !important;
+}
+
+footer {
+    display: none !important;
+}
+
+/* Force all gradio components to use light theme */
+.svelte-1ed2p3z, .svelte-1ed2p3z * {
+    background-color: transparent !important;
+}
+
+/* ============================================
+   TYPOGRAPHY - MODERN DARK THEME
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.5px !important;
+}
+
+p, span, div, label, .label, .markdown-body {
+    color: #cbd5e1 !important;
+}
+
+h1 {
+    font-size: 2.8rem !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+    margin-bottom: 25px !important;
+    color: #ffffff !important;
+    letter-spacing: -1px !important;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+h2 {
+    font-size: 1.8rem !important;
+    color: #f8fafc !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.5px !important;
+}
+
+h3 {
+    font-size: 1.4rem !important;
+    color: #f1f5f9 !important;
+    font-weight: 600 !important;
+}
+
+/* ============================================
+   APP BAR - LINKEDIN STYLE PROFESSIONAL HEADER
+   ============================================ */
+.app-bar {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+    padding: 0;
+    margin: -30px -30px 30px -30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.app-bar-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.app-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.app-logo-icon {
+    font-size: 2rem;
+    filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.5));
+}
+
+.app-logo-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
+
+.app-logo-subtitle {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+.app-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-right: 20px;
+    border-right: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.nav-stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.nav-stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #60a5fa;
+    line-height: 1;
+}
+
+.nav-stat-label {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #10b981;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: #10b981;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ============================================
+   KPI CARDS - MODERN GRADIENT DESIGN
+   ============================================ */
+.kpi-card {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%) !important;
+    color: white !important;
+    padding: 40px 28px !important;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3) !important;
+    min-height: 180px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(96, 165, 250, 0.3) !important;
+    margin: 0 !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.kpi-card:hover::before {
+    opacity: 1;
+}
+
+.kpi-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4) !important;
+    border-color: rgba(147, 197, 253, 0.6) !important;
+}
+
+.kpi-value {
+    font-size: 3.8rem !important;
+    font-weight: 900 !important;
+    color: #ffffff !important;
+    background: transparent !important;
+    margin-bottom: 12px;
+    line-height: 1;
+    letter-spacing: -3px !important;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-family: 'Roboto', sans-serif !important;
+}
+
+.kpi-label {
+    font-size: 0.75rem !important;
+    letter-spacing: 3px !important;
+    text-transform: uppercase !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    background: transparent !important;
+    font-weight: 600 !important;
+    opacity: 1;
+}
+
+/* Force all KPI card children to have transparent background */
+.kpi-card *, .kpi-card *::before, .kpi-card *::after {
+    background: transparent !important;
+}
+    opacity: 1;
+}
+
+/* ============================================
+   WHITE PANELS - MODERN GLASS MORPHISM
+   ============================================ */
+.panel-white, .group-container {
+    background: rgba(30, 41, 59, 0.4) !important;
+    border: 1px solid rgba(148, 163, 184, 0.2) !important;
+    border-radius: 16px !important;
+    padding: 32px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+    margin-bottom: 24px;
+    width: 100%;
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+
+.panel-white h4, .group-container h4 {
+    color: #ffffff !important;
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+    font-weight: 700 !important;
+    font-size: 1.2rem !important;
+    letter-spacing: -0.3px !important;
+}
+
+/* ============================================
+   CONSISTENT ROW AND COLUMN SPACING
+   ============================================ */
+.row {
+    gap: 24px !important;
+    margin-bottom: 20px !important;
+}
+
+.column {
+    padding: 0 !important;
+}
+
+/* Ensure equal width columns in KPI section */
+.kpi-row > * {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+/* Force equal width for split panels (Input/Output) */
+.split-panel-row {
+    display: flex !important;
+    gap: 24px !important;
+}
+
+.split-panel-row > .column {
+    flex: 1 !important;
+    min-width: 0 !important;
+    max-width: 50% !important;
+}
+
+/* ============================================
+   TABS - LINKEDIN STYLE CLEAN NAVIGATION
+   ============================================ */
+.tabs {
+    border: none !important;
+    background: transparent !important;
+    margin-bottom: 30px;
+}
+
+.tab-nav {
+    display: flex !important;
+    justify-content: flex-start !important;
+    gap: 0 !important;
+    border: none !important;
+    border-bottom: 2px solid rgba(148, 163, 184, 0.2) !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin-bottom: 30px;
+}
+
+.tab-nav button {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 3px solid transparent !important;
+    color: #94a3b8 !important;
+    border-radius: 0 !important;
+    padding: 16px 24px !important;
+    font-weight: 500 !important;
+    font-size: 0.95rem !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+    letter-spacing: 0.2px;
+    position: relative;
+    margin-bottom: -2px;
+}
+
+.tab-nav button:hover:not(.selected) {
+    color: #cbd5e1 !important;
+    background: rgba(148, 163, 184, 0.05) !important;
+}
+
+.tab-nav button.selected {
+    background: transparent !important;
+    color: #3b82f6 !important;
+    border-bottom: 3px solid #3b82f6 !important;
+    box-shadow: none !important;
+    font-weight: 600 !important;
+}
+
+/* Active tab indicator animation */
+.tab-nav button.selected::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #3b82f6 0%, #60a5fa 100%);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        transform: scaleX(0);
+    }
+    to {
+        transform: scaleX(1);
+    }
+}
+
+/* ============================================
+   BUTTONS - MODERN GRADIENT
+   ============================================ */
+.btn-primary, button[variant="primary"], button.primary {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    color: white !important;
+    font-weight: 600 !important;
+    border: 1px solid rgba(96, 165, 250, 0.3) !important;
+    border-radius: 12px !important;
+    padding: 16px 36px !important;
+    font-size: 1rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-shadow: 0 8px 16px rgba(59, 130, 246, 0.25) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    letter-spacing: 0.3px;
+}
+
+.btn-primary:hover, button[variant="primary"]:hover, button.primary:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+    border-color: rgba(147, 197, 253, 0.5) !important;
+    box-shadow: 0 12px 24px rgba(59, 130, 246, 0.4) !important;
+    transform: translateY(-2px);
+}
+
+/* Fix button container spacing */
+button {
+    margin: 10px 0 !important;
+}
+
+/* ============================================
+   INFO SECTION - MODERN GRADIENT BOX
+   ============================================ */
+.info-section {
+    background: linear-gradient(135deg, rgba(30, 58, 138, 0.8) 0%, rgba(59, 130, 246, 0.6) 100%) !important;
+    color: white !important;
+    padding: 40px !important;
+    border-radius: 20px !important;
+    margin-top: 30px !important;
+    box-shadow: 0 12px 32px rgba(59, 130, 246, 0.3) !important;
+    border: 1px solid rgba(96, 165, 250, 0.3) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.info-section h3 {
+    margin-top: 0 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    font-size: 1.8rem !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    background: transparent !important;
+    letter-spacing: -0.5px;
+}
+
+.info-section p, .info-section li, .info-section ul {
+    color: rgba(255, 255, 255, 0.95) !important;
+    opacity: 1 !important;
+    line-height: 1.9 !important;
+    font-size: 1rem !important;
+    background: transparent !important;
+    font-weight: 400;
+}
+
+.info-section strong {
+    color: #dbeafe !important;
+    font-weight: 700 !important;
+    font-weight: 800 !important;
+    background: transparent !important;
+}
+
+.info-section em {
+    color: #bfdbfe !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
+    background: transparent !important;
+}
+
+/* Force all info-section children to have transparent background */
+.info-section *, .info-section *::before, .info-section *::after {
+    background: transparent !important;
+}
+
+/* ============================================
+   INPUTS - DARK THEME
+   ============================================ */
+input, textarea, select, .input-text {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 2px solid #334155 !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+}
+
+input:focus, textarea:focus, select:focus {
+    border-color: #3b82f6 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2) !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #64748b !important;
+    opacity: 1 !important;
+}
+
+/* ============================================
+   MARKDOWN TEXT - DARK THEME
+   ============================================ */
+.markdown-text, .markdown-text p, .markdown-text li, .markdown-text ul {
+    color: #cbd5e1 !important;
+    font-weight: 500 !important;
+}
+
+.markdown-text h4 {
+    color: #f1f5f9 !important;
+    margin-top: 0 !important;
+    font-weight: 800 !important;
+}
+
+.markdown-text strong {
+    color: #f1f5f9 !important;
+    font-weight: 800 !important;
+}
+
+/* Force markdown in panels */
+.group-container .markdown-text,
+.panel-white .markdown-text {
+    color: #cbd5e1 !important;
+}
+
+/* Fix markdown in info-section (should inherit white color) */
+.info-section .markdown-text,
+.info-section .markdown-text p,
+.info-section .markdown-text li,
+.info-section .markdown-text ul,
+.info-section .markdown-text h3,
+.info-section .markdown-text h4 {
+    color: #ffffff !important;
+    background: transparent !important;
+}
+
+.info-section .markdown-text strong {
+    color: #93c5fd !important;
+    background: transparent !important;
+}
+
+.info-section .markdown-text em {
+    color: #bfdbfe !important;
+    background: transparent !important;
+}
+
+/* ============================================
+   IMAGE/VIDEO CONTAINERS - DARK THEME
+   ============================================ */
+.image-container, .video-container {
+    background: #1e293b !important;
+    border: 2px dashed #475569 !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+}
+
+/* ============================================
+   GALLERY - DARK THEME
+   ============================================ */
+.gallery {
+    background: #1e293b !important;
+    padding: 15px !important;
+    border-radius: 8px !important;
+    border: 2px solid #334155 !important;
+}
+
+/* ============================================
+   TABLE/DATAFRAME - DARK THEME
+   ============================================ */
+table, .dataframe {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+    border: 2px solid #334155 !important;
+}
+
+table th {
+    background: #0f172a !important;
+    color: #f1f5f9 !important;
+    font-weight: 700 !important;
+    border-bottom: 2px solid #475569 !important;
+    padding: 12px !important;
+}
+
+table td {
+    color: #cbd5e1 !important;
+    border-bottom: 1px solid #334155 !important;
+    padding: 10px 12px !important;
+    font-weight: 500 !important;
+}
+
+table tr:hover {
+    background: rgba(59, 130, 246, 0.1) !important;
+}
+
+/* ============================================
+   JSON VIEWER - DARK THEME
+   ============================================ */
+.json-holder {
+    background: #1e293b !important;
+    border: 2px solid #334155 !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    color: #cbd5e1 !important;
+    font-family: 'Courier New', monospace !important;
+    font-weight: 600 !important;
+}
+
+/* ============================================
+   LABELS - DARK THEME
+   ============================================ */
+label, .label {
+    color: #f1f5f9 !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+}
+
+/* ============================================
+   FOOTER - DARK THEME
+   ============================================ */
+.footer-section {
+    text-align: center;
+    color: #94a3b8 !important;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 30px 20px;
+    background: rgba(15, 23, 42, 0.6);
+    border-radius: 12px;
+    margin-top: 50px;
+    border: 2px solid #1e3a5f;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.footer-section strong {
+    color: #f1f5f9 !important;
+    font-weight: 800 !important;
+}
+
+.footer-section em {
+    color: #94a3b8 !important;
+    font-weight: 600 !important;
+}
+
+/* ============================================
+   OVERRIDE ANY LIGHT MODE COMPLETELY
+   ============================================ */
+.dark, .dark *, [data-theme="light"], [data-theme="light"] * {
+    background-color: #0a1929 !important;
+    color: #e2e8f0 !important;
+}
+
+/* Force dark theme globally */
+:root {
+    --body-background-fill: #0a1929 !important;
+    --block-background-fill: rgba(15, 23, 42, 0.6) !important;
+    --body-text-color: #e2e8f0 !important;
+    --block-label-text-color: #f1f5f9 !important;
+}
+
+/* ============================================
+   FIX GRADIO COMPONENT CONTRAST - DARK THEME
+   ============================================ */
+.gr-button {
+    font-weight: 700 !important;
+}
+
+.gr-input, .gr-box, .gr-form {
+    border-color: #334155 !important;
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+}
+
+.gr-panel {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 2px solid #1e3a5f !important;
+}
+
+/* Ensure all text in components is visible */
+.gr-text-input, .gr-number-input, .gr-dropdown {
+    color: #f1f5f9 !important;
+    font-weight: 600 !important;
+    background: #1e293b !important;
+}
+

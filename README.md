@@ -1,262 +1,156 @@
-# Water Meter AI - On-Device Detection
+# 💧 Water Meter AI Detection System
 
-**Author:** Arsenius Purbandono  
-**Hardware:** RTX 3080 Ti (12GB) | Ryzen 7 9700X | 32GB DDR5  
-**Dataset:** 23,986 images (OBB) | Model: YOLOv8s-obb  
-**Target:** TFLite INT8 (<10MB) for Flutter mobile deployment
+Professional AI-powered water meter detection and reading extraction system with modern web interface.
 
----
+## 🎯 Features
 
-## 🎯 Executive Summary & Strategic Value
+- **📊 Model Dashboard**: Real-time performance metrics and KPI monitoring
+- **📷 Single Image Detection**: Analyze individual water meter images
+- **📂 Batch Processing**: Process multiple images simultaneously
+- **🎥 Video Analysis**: Track water meters in video footage
+- **📹 Live Webcam**: Real-time detection from webcam feed
 
-Proyek ini adalah solusi **Digital Transformation (DX)** untuk mengubah meteran air analog (legacy) menjadi data digital secara real-time menggunakan **On-Device AI (Edge Computing)**.
+## 🏗️ Project Structure
 
-### Problem Statement
-
-- ❌ Pencatatan manual rawan _human error_
-- ❌ Proses lambat dan biaya operasional tinggi
-- ❌ Tidak ada real-time monitoring
-
-### Solution
-
-- ✅ _On-Device AI_ yang berjalan **offline** di HP petugas
-- ✅ Real-time detection dengan **< 100ms latency**
-- ✅ **Zero cloud dependency** (Edge Computing)
-
-### Key Performance Indicators (KPI)
-
-| Metric             | Target        | Impact                                   |
-| ------------------ | ------------- | ---------------------------------------- |
-| **Efficiency**     | 70% faster    | Memangkas waktu input data               |
-| **Cost Saving**    | 60% reduction | Mengurangi kebutuhan server cloud        |
-| **Accuracy**       | >95% mAP50    | Menangani rotasi angka & kondisi ekstrem |
-| **Inference Time** | <100ms        | Real-time experience                     |
-| **Model Size**     | <10MB         | Fast deployment ke mobile                |
-
----
-
-## 📊 Dataset Technical Specifications
-
-### Dataset Statistics
-
+```text
+water-meter-ai/
+│
+├── main.py                  # 🚀 Entry point - Run this file
+├── requirements.txt         # 📦 Python dependencies
+├── README.md               # 📖 Documentation (this file)
+│
+├── assets/                 # 📁 Static assets
+│   └── models/
+│       └── water_meter_model.pt  # YOLOv8-OBB model weights
+│
+├── src/                    # 💻 Source code package
+│   ├── __init__.py         # Package initialization
+│   ├── app.py              # Gradio web interface
+│   ├── core.py             # Business logic & ML inference
+│   └── theme.py            # UI design system (SeaSide Theme)
+│
+├── water-meter-ai/         # 🔬 Training artifacts
+│   └── exp/
+│       ├── weights/        # Model checkpoints
+│       └── results.csv     # Training metrics
+│
+├── train/                  # 📊 Training dataset
+├── valid/                  # ✅ Validation dataset
+└── test/                   # 🧪 Test dataset
 ```
-Total Images: 23,986 images
-├── Train: 22,512 images (94%)
-├── Valid: 795 images (3%)
-└── Test: 679 images (3%)
-
-Annotation Type: Oriented Bounding Box (OBB)
-Classes: 0-9 (10 digit classes)
-```
-
-### Preprocessing Strategy
-
-- **Auto-Orient:** Applied (prevent metadata rotation errors)
-- **Resize:** Fit (black edges) in 512x512
-  - _Preserves aspect ratio_ - Critical untuk geometri angka
-
-### Augmentation Strategy
-
-**Multiplier:** 3x per image
-
-| Augmentation | Range       | Purpose                      |
-| ------------ | ----------- | ---------------------------- |
-| Blur         | Up to 2.5px | Simulasi motion blur         |
-| Noise        | Up to 1.96% | Simulasi ISO tinggi          |
-| Brightness   | ±25%        | Variasi kondisi cahaya       |
-| Exposure     | ±20%        | Handle backlight             |
-| Rotation     | ±15°        | Toleransi kemiringan         |
-| Shear        | ±10° H/V    | Perspektif tidak tegak lurus |
-
----
-
-## Quick Start
-
-**Install:**
-
-```powershell
-python -m venv venv
-.\venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-**Monitor (Terminal 1):**
-
-```powershell
-python app_monitor.py
-# Opens http://localhost:7860
-```
-
-**Train (Terminal 2):**
-
-```powershell
-python scripts/train.py --config configs/train_config.yaml
-```
-
-**Export:**
-
-```powershell
-python scripts/export.py --weights runs/train/exp/weights/best.pt
-```
-
----
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### 1. Install Dependencies
 
 ```bash
-# Python 3.8+
-python --version
-
-# CUDA 11.8+ (for GPU training)
-nvidia-smi
-```
-
-### Installation
-
-#### Local Setup
-
-```bash
-# Clone repository
-git clone <your-repo-url>
-cd water-meter-ai
-
-# Create virtual environment
-python -m venv venv
-# Windows
-.\venv\Scripts\activate
-# Linux/Mac
-source venv/bin/activate
-
-# Install dependencies
 pip install -r requirements.txt
 ```
 
-#### Google Colab Setup
+### 2. Run Application
+
+```bash
+python main.py
+```
+
+### 3. Access Web Interface
+
+Open your browser and navigate to:
+
+```
+http://localhost:7860
+```
+
+## 📦 Dependencies
+
+- **Gradio** ≥ 6.0: Web interface framework
+- **Pandas**: Data manipulation
+- **Pillow**: Image processing
+- **OpenCV**: Video processing
+- **NumPy**: Numerical operations
+- **Ultralytics** (optional): YOLOv8 inference
+
+## 🎨 Design System
+
+The application uses **SeaSide Theme** - a professional Japanese corporate design with:
+
+- **Primary Color**: Navy Blue (#112D4E)
+- **Accent Color**: Medium Blue (#3F72AF)
+- **Background**: Dark gradient (#0a1929 → #0f2744)
+- **Typography**: Roboto font family
+- **Effects**: Glass morphism with blur effects
+
+## 🔧 Architecture
+
+### Core Components
+
+1. **WaterMeterSystem** (`src/core.py`)
+   - Handles all ML inference operations
+   - Supports single image, batch, video, and webcam
+   - Currently in MOCK mode for development
+
+2. **Gradio Interface** (`src/app.py`)
+   - 5-tab navigation system
+   - LinkedIn-style app bar
+   - Responsive layout with glass morphism
+
+3. **SeaSide Theme** (`src/theme.py`)
+   - Custom Gradio theme
+   - Japanese corporate color palette
+   - Prevents dark mode conflicts
+
+## 📊 Model Information
+
+- **Architecture**: YOLOv8-OBB (Oriented Bounding Boxes)
+- **Training**: 100 epochs
+- **Performance**:
+  - mAP@50: 94.4%
+  - Precision: 94.2%
+  - Recall: 85.3%
+  - mAP@50-95: 78.0%
+
+## 🛠️ Development
+
+### Running in Development Mode
+
+The system automatically runs in MOCK mode if the model file is not found. This allows frontend development without requiring the actual model.
+
+### Project Structure Explained
+
+- **`main.py`**: Single entry point - handles all launch configuration
+- **`src/`**: Clean Python package with proper imports
+- **`assets/`**: All static resources (models, images, styles)
+- **No root-level clutter**: Professional package organization
+
+### Code Organization
 
 ```python
-# Upload to Colab and run:
-!git clone <your-repo-url>
-%cd water-meter-ai
-!pip install -r requirements.txt
+# Import the application
+from src.app import demo
+from src.theme import get_seaside_theme
+from src.core import WaterMeterSystem
+
+# Everything is properly packaged
 ```
 
-### Training
+## 🔒 Security & Privacy
 
-#### Local Training
-
-```bash
-python scripts/train.py --config configs/train_config.yaml
-```
-
-#### Colab Training
-
-Open `notebooks/03_training_colab.ipynb` in Google Colab
-
-### Evaluation
-
-```bash
-python scripts/evaluate.py --weights runs/train/exp/weights/best.pt
-```
-
-### Export to TFLite
-
-```bash
-python scripts/export.py --weights runs/train/exp/weights/best.pt --format tflite
-```
-
----
-
-## 📈 Training Pipeline
-
-### Phase 1: Baseline Training
-
-- Model: YOLOv8n-obb
-- Epochs: 100
-- Image Size: 512x512
-- Batch Size: 16 (adjust based on GPU)
-
-### Phase 2: Hyperparameter Tuning
-
-- Learning Rate: [0.001, 0.01]
-- Augmentation Intensity: [0.5, 1.0]
-- Model Size: [n, s, m]
-
-### Phase 3: Model Optimization
-
-- Quantization: Int8
-- Pruning (if needed)
-- Final Format: TFLite
-
----
-
-## 🎯 Model Performance Targets
-
-| Metric                  | Target | Minimum Acceptable |
-| ----------------------- | ------ | ------------------ |
-| mAP50                   | >95%   | >90%               |
-| mAP50-95                | >85%   | >80%               |
-| Inference Time (Mobile) | <100ms | <150ms             |
-| Model Size              | <10MB  | <15MB              |
-| False Positive Rate     | <5%    | <10%               |
-
----
-
-## 🔬 Experiment Tracking
-
-We use **Weights & Biases** for experiment tracking:
-
-```python
-import wandb
-wandb.init(project="water-meter-ai", name="experiment-1")
-```
-
----
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-pytest tests/
-
-# Run specific test
-pytest tests/test_model.py -v
-```
-
----
-
-## 📱 Deployment
-
-### Flutter Integration
-
-See [deployment/flutter/README.md](deployment/flutter/README.md)
-
-### Model Files
-
-- **Training Checkpoint:** `runs/train/exp/weights/best.pt`
-- **ONNX:** `exports/best.onnx`
-- **TFLite:** `exports/best.tflite` (Int8 Quantized)
-
----
-
-## 🤝 Contributing
-
-1. Create feature branch
-2. Make changes
-3. Run tests
-4. Submit PR
-
----
+- **Webcam Processing**: All processing happens locally in browser
+- **No Data Transmission**: Video data is never sent to external servers
+- **Local Inference**: Model runs entirely on your hardware
 
 ## 📝 License
 
-[Your License Here]
+© 2026 Bapenda Water Meter Detection Project. All Rights Reserved.
+
+## 👨‍💻 Author
+
+**Bapenda Water Meter Detection Project**  
+Version: 1.0.0  
+Framework: Ultralytics YOLOv8-OBB  
+UI: Gradio v6.0
 
 ---
 
-## 📧 Contact
-
-**Arsenius Purbandono**  
-AI & Mobile Engineer  
-[Your Email/LinkedIn]
+**Need Help?**  
+Check the code documentation in each module or contact the development team.
