@@ -16,6 +16,8 @@ Design: Modern dark theme with Roboto font and glass morphism
 import gradio as gr
 import pandas as pd
 from pathlib import Path
+import json
+import traceback
 
 # Import from local package
 from app_demo.src.theme import get_seaside_theme
@@ -24,7 +26,20 @@ from app_demo.src.core import WaterMeterSystem
 
 # Initialize the Water Meter Detection System
 print("Initializing Water Meter AI Detection System...")
-system = WaterMeterSystem("app_demo/assets/models/water_meter_model.pt")
+
+# Fix: Use correct model path relative to project root
+# When running from project root: assets/models/water_meter_model.pt
+# When running from app_demo: ../assets/models/water_meter_model.pt
+import os
+if os.path.exists("assets/models/water_meter_model.pt"):
+    model_path = "assets/models/water_meter_model.pt"
+elif os.path.exists("../assets/models/water_meter_model.pt"):
+    model_path = "../assets/models/water_meter_model.pt"
+else:
+    model_path = "app_demo/assets/models/water_meter_model.pt"  # Fallback
+
+print(f"Using model path: {model_path}")
+system = WaterMeterSystem(model_path)
 
 
 # Load CSS from external file
@@ -106,6 +121,68 @@ def create_kpi_card(value: str, label: str) -> str:
         <div class="kpi-label">{label}</div>
     </div>
     """
+
+
+# ============================================
+# WRAPPER FUNCTIONS WITH ERROR HANDLING
+# ============================================
+
+def predict_single_wrapper(image):
+    """
+    Wrapper for predict_single with error handling.
+    
+    Args:
+        image: PIL Image or None
+    
+    Returns:
+        Tuple of (annotated_image, json_result)
+    """
+    try:
+        # Check if image is provided
+        if image is None:
+            error_msg = {
+                "status": "error",
+                "message": "❌ No image provided. Please upload an image first.",
+                "details": "Image input is empty"
+            }
+            return None, error_msg
+        
+        # Check if model is loaded
+        if system.model is None or system.is_mock_mode:
+            error_msg = {
+                "status": "error",
+                "message": "❌ Model not loaded! Please check model file path.",
+                "details": f"Model path: {system.model_path}",
+                "solution": "Please ensure the model file exists at:\n- assets/models/water_meter_model.pt\nOr restart the application."
+            }
+            return None, error_msg
+        
+        # Call the actual prediction function
+        annotated_image, json_str = system.predict_single(image)
+        
+        # Parse JSON string to dict for better display
+        if isinstance(json_str, str):
+            json_result = json.loads(json_str)
+        else:
+            json_result = json_str
+        
+        return annotated_image, json_result
+        
+    except Exception as e:
+        # Catch any error and return user-friendly message
+        error_msg = {
+            "status": "error",
+            "message": f"❌ Error during prediction: {str(e)}",
+            "details": traceback.format_exc(),
+            "solution": "Please check:\n1. Image is valid and readable\n2. Model file exists and is not corrupted\n3. Try restarting the application"
+        }
+        print(f"\n{'='*60}")
+        print(f"ERROR in predict_single_wrapper:")
+        print(f"{'='*60}")
+        print(traceback.format_exc())
+        print(f"{'='*60}\n")
+        
+        return None, error_msg
 
 
 # Build the Gradio Application
@@ -269,7 +346,7 @@ with gr.Blocks(title="Water Meter AI Detection") as demo:
             
             # Wire up the logic
             single_analyze_btn.click(
-                fn=system.predict_single,
+                fn=predict_single_wrapper,
                 inputs=[single_input_image],
                 outputs=[single_output_image, single_output_json]
             )
