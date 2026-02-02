@@ -187,11 +187,45 @@ python training_dashboard.py
 
 ## 📈 Performance
 
-| Metric    | Value       |
-| --------- | ----------- |
-| **mAP50** | 95%+        |
-| **Speed** | ~30ms (GPU) |
-| **Size**  | ~6MB        |
+**Based on 100 epochs training with YOLOv8s-OBB:**
+
+| Metric             | Value       | Notes                              |
+| ------------------ | ----------- | ---------------------------------- |
+| **mAP50 (Box)**    | **94.44%**  | @ epoch 100 (final)                |
+| **mAP50-95 (Box)** | **77.96%**  | @ epoch 100 (final)                |
+| **Precision**      | **94.16%**  | @ epoch 100                        |
+| **Recall**         | **85.26%**  | @ epoch 100                        |
+| **Model Size**     | **22.2 MB** | YOLOv8s-OBB (water_meter_model.pt) |
+| **Training Time**  | **~10.8h**  | 100 epochs on GPU                  |
+| **Inference**      | ~30ms       | GPU (estimated)                    |
+
+### 📊 Training Configuration
+
+- **Base Model**: YOLOv8s-OBB (Oriented Bounding Box)
+- **Image Size**: 512x512
+- **Batch Size**: 24
+- **Optimizer**: AdamW
+- **Device**: CUDA (GPU)
+- **Epochs**: 100
+- **Dataset Split**: Train 80% / Valid 15% / Test 5%
+
+### 📈 Key Achievements
+
+- ✅ **Best mAP50**: 94.44% (excellent detection accuracy)
+- ✅ **Consistent Training**: Loss decreased steadily from epoch 1 to 100
+- ✅ **High Precision**: 94.16% (low false positives)
+- ✅ **Good Recall**: 85.26% (captures most digits)
+- ✅ **Production Ready**: Model ready for deployment
+
+### 📁 Training Results Available
+
+Full training artifacts available in `training/runs/exp_archive/`:
+
+- `results.csv` - Complete metrics per epoch
+- `confusion_matrix.png` - Class confusion analysis
+- `results.png` - Training curves visualization
+- `BoxPR_curve.png` - Precision-Recall curve
+- `weights/water_meter_model.pt` - Best trained model
 
 ---
 

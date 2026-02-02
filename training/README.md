@@ -2,6 +2,12 @@
 
 Training pipeline for YOLOv8-OBB water meter digit detection model.
 
+**Latest Model Performance:**
+
+- ✅ mAP50: **94.44%** @ 100 epochs
+- ✅ Precision: **94.16%** | Recall: **85.26%**
+- ✅ Model: `training/runs/exp_archive/weights/water_meter_model.pt` (22.2 MB)
+
 ---
 
 ## 📋 Quick Start
