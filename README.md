@@ -1,156 +1,206 @@
 # 💧 Water Meter AI Detection System
 
-Professional AI-powered water meter detection and reading extraction system with modern web interface.
+**AI-powered water meter digit detection and reading extraction with YOLOv8-OBB (Oriented Bounding Box)**
 
-## 🎯 Features
-
-- **📊 Model Dashboard**: Real-time performance metrics and KPI monitoring
-- **📷 Single Image Detection**: Analyze individual water meter images
-- **📂 Batch Processing**: Process multiple images simultaneously
-- **🎥 Video Analysis**: Track water meters in video footage
-- **📹 Live Webcam**: Real-time detection from webcam feed
-
-## 🏗️ Project Structure
-
-```text
-water-meter-ai/
-│
-├── main.py                  # 🚀 Entry point - Run this file
-├── requirements.txt         # 📦 Python dependencies
-├── README.md               # 📖 Documentation (this file)
-│
-├── assets/                 # 📁 Static assets
-│   └── models/
-│       └── water_meter_model.pt  # YOLOv8-OBB model weights
-│
-├── src/                    # 💻 Source code package
-│   ├── __init__.py         # Package initialization
-│   ├── app.py              # Gradio web interface
-│   ├── core.py             # Business logic & ML inference
-│   └── theme.py            # UI design system (SeaSide Theme)
-│
-├── water-meter-ai/         # 🔬 Training artifacts
-│   └── exp/
-│       ├── weights/        # Model checkpoints
-│       └── results.csv     # Training metrics
-│
-├── train/                  # 📊 Training dataset
-├── valid/                  # ✅ Validation dataset
-└── test/                   # 🧪 Test dataset
-```
-
-## 🚀 Quick Start
-
-### 1. Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 2. Run Application
-
-```bash
-python main.py
-```
-
-### 3. Access Web Interface
-
-Open your browser and navigate to:
-
-```
-http://localhost:7860
-```
-
-## 📦 Dependencies
-
-- **Gradio** ≥ 6.0: Web interface framework
-- **Pandas**: Data manipulation
-- **Pillow**: Image processing
-- **OpenCV**: Video processing
-- **NumPy**: Numerical operations
-- **Ultralytics** (optional): YOLOv8 inference
-
-## 🎨 Design System
-
-The application uses **SeaSide Theme** - a professional Japanese corporate design with:
-
-- **Primary Color**: Navy Blue (#112D4E)
-- **Accent Color**: Medium Blue (#3F72AF)
-- **Background**: Dark gradient (#0a1929 → #0f2744)
-- **Typography**: Roboto font family
-- **Effects**: Glass morphism with blur effects
-
-## 🔧 Architecture
-
-### Core Components
-
-1. **WaterMeterSystem** (`src/core.py`)
-   - Handles all ML inference operations
-   - Supports single image, batch, video, and webcam
-   - Currently in MOCK mode for development
-
-2. **Gradio Interface** (`src/app.py`)
-   - 5-tab navigation system
-   - LinkedIn-style app bar
-   - Responsive layout with glass morphism
-
-3. **SeaSide Theme** (`src/theme.py`)
-   - Custom Gradio theme
-   - Japanese corporate color palette
-   - Prevents dark mode conflicts
-
-## 📊 Model Information
-
-- **Architecture**: YOLOv8-OBB (Oriented Bounding Boxes)
-- **Training**: 100 epochs
-- **Performance**:
-  - mAP@50: 94.4%
-  - Precision: 94.2%
-  - Recall: 85.3%
-  - mAP@50-95: 78.0%
-
-## 🛠️ Development
-
-### Running in Development Mode
-
-The system automatically runs in MOCK mode if the model file is not found. This allows frontend development without requiring the actual model.
-
-### Project Structure Explained
-
-- **`main.py`**: Single entry point - handles all launch configuration
-- **`src/`**: Clean Python package with proper imports
-- **`assets/`**: All static resources (models, images, styles)
-- **No root-level clutter**: Professional package organization
-
-### Code Organization
-
-```python
-# Import the application
-from src.app import demo
-from src.theme import get_seaside_theme
-from src.core import WaterMeterSystem
-
-# Everything is properly packaged
-```
-
-## 🔒 Security & Privacy
-
-- **Webcam Processing**: All processing happens locally in browser
-- **No Data Transmission**: Video data is never sent to external servers
-- **Local Inference**: Model runs entirely on your hardware
-
-## 📝 License
-
-© 2026 Bapenda Water Meter Detection Project. All Rights Reserved.
-
-## 👨‍💻 Author
-
-**Bapenda Water Meter Detection Project**  
-Version: 1.0.0  
-Framework: Ultralytics YOLOv8-OBB  
-UI: Gradio v6.0
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://python.org)
+[![YOLOv8](https://img.shields.io/badge/YOLOv8-OBB-green.svg)](https://github.com/ultralytics/ultralytics)
+[![Gradio](https://img.shields.io/badge/Gradio-6.0+-orange.svg)](https://gradio.app)
 
 ---
 
-**Need Help?**  
-Check the code documentation in each module or contact the development team.
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Project Structure](#-project-structure)
+- [Quick Start](#-quick-start)
+- [Training](#-training)
+- [Demo Application](#-demo-application)
+- [Dataset](#-dataset)
+
+---
+
+## 🎯 Features
+
+### 🚀 Demo Application (`app_demo/`)
+
+- **📊 Dashboard**: Real-time KPI monitoring
+- **📷 Single Image**: Individual analysis with JSON output
+- **📂 Batch Processing**: Multiple images with CSV export
+- **🎥 Video Analysis**: Frame-by-frame detection
+- **📹 Live Webcam**: Real-time camera feed
+
+### 🎓 Training System (`training/`)
+
+- **📈 Training Dashboard**: Live metrics monitoring
+- **⚙️ Config Management**: YAML-based system
+- **📝 Scripts**: Local + Google Colab support
+- **📊 Logging**: Comprehensive training logs
+
+---
+
+## 🏗️ Project Structure
+
+```
+Water-Meter-Dataset/
+│
+├── 📱 app_demo/                    # Demo Application
+│   ├── main.py                     # Run demo
+│   ├── assets/models/
+│   │   └── water_meter_model.pt   # Trained model
+│   └── src/                        # Modular architecture
+│       ├── app.py                  # Gradio UI
+│       ├── core.py                 # Main orchestrator
+│       ├── inference/              # Detection parsing
+│       ├── visualization/          # Annotation rendering
+│       ├── utils/                  # Video I/O, helpers
+│       └── preprocessing/          # Enhancement (placeholder)
+│
+├── 🎓 training/                    # Training System
+│   ├── training_dashboard.py      # Monitor training
+│   ├── configs/                    # YAML configs
+│   ├── scripts/
+│   │   ├── train.py               # Main training
+│   │   ├── export.py              # Model export
+│   │   └── resplit_dataset.py    # Dataset splitting
+│   ├── notebooks/                  # Jupyter notebooks
+│   └── runs/                       # Training outputs
+│
+├── 📊 Dataset
+│   ├── data.yaml                   # Dataset config
+│   ├── train/                      # 80% training
+│   ├── valid/                      # 15% validation
+│   └── test/                       # 5% test
+│
+└── 🔧 Shared
+    ├── src/utils/                  # Config, logging
+    └── requirements.txt            # Base dependencies
+```
+
+---
+
+## 🚀 Quick Start
+
+### 1️⃣ Install Dependencies
+
+**Demo Application:**
+
+```bash
+cd app_demo
+pip install -r requirements.txt
+```
+
+**Training:**
+
+```bash
+cd training
+pip install -r requirements.txt
+```
+
+### 2️⃣ Run Demo
+
+```bash
+cd app_demo
+python main.py
+```
+
+Open: `http://localhost:7860`
+
+---
+
+## 🎓 Training
+
+### Local Training
+
+```bash
+cd training
+python scripts/train.py --config configs/train_config.yaml
+```
+
+### Google Colab
+
+1. Upload `notebooks/03_training_colab.ipynb`
+2. Select **T4 GPU** runtime
+3. Run all cells
+
+### Monitor Progress
+
+```bash
+cd training
+python training_dashboard.py
+```
+
+---
+
+## 📱 Demo Features
+
+### Architecture Highlights
+
+**Modular Design:**
+
+- ✅ OBB detection parsing & spatial sorting
+- ✅ License plate style annotations
+- ✅ FFmpeg H.264 video conversion
+- ✅ Ready for enhancement pipeline
+
+**Key Features:**
+
+- Left-to-right digit sorting
+- Navy Blue theme (#112D4E)
+- Browser-compatible video
+- JSON + CSV exports
+
+---
+
+## 📊 Dataset
+
+### Classes (11 Total)
+
+- **0-9**: `digit_0` - `digit_9`
+- **10**: `border_water_meter_number`
+
+### Split Ratio
+
+- Training: 80%
+- Validation: 15%
+- Test: 5%
+
+### Format
+
+- **YOLOv8-OBB** (Oriented Bounding Box)
+- Coordinates: `xyxyxyxy` (4 corners)
+
+---
+
+## 📈 Performance
+
+| Metric    | Value       |
+| --------- | ----------- |
+| **mAP50** | 95%+        |
+| **Speed** | ~30ms (GPU) |
+| **Size**  | ~6MB        |
+
+---
+
+## 👨‍💻 Author
+
+**Arsenius Purbandono**
+
+- GitHub: [@xzars-git](https://github.com/xzars-git)
+
+---
+
+## 🙏 Credits
+
+- [Ultralytics YOLO](https://github.com/ultralytics/ultralytics)
+- [Gradio](https://gradio.app/)
+- [Roboflow](https://roboflow.com/)
+
+---
+
+<div align="center">
+
+**⭐ Star this repo if it helps you!**
+
+Made with ❤️ by Arsenius Purbandono
+
+</div>

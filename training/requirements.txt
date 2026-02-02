@@ -1,0 +1,22 @@
+# Water Meter AI - Training Dependencies
+# ==========================================
+
+# Core ML/DL
+ultralytics>=8.3.0          # YOLOv8 framework
+torch>=2.0.0               # PyTorch
+torchvision>=0.15.0        # Vision utilities
+opencv-python>=4.7.0       # Computer vision
+
+# Monitoring & Visualization
+gradio>=6.0.0              # Training dashboard UI
+plotly>=5.14.0             # Interactive plots
+pandas>=2.0.0              # Data manipulation
+psutil>=5.9.0              # System monitoring
+gputil>=1.4.0              # GPU monitoring
+
+# YAML Config
+pyyaml>=6.0                # Configuration files
+
+# Development
+notebook>=7.0.0            # Jupyter notebooks
+ipykernel>=6.22.0         # Jupyter kernel

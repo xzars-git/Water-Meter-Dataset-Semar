@@ -19,9 +19,9 @@ from pathlib import Path
 import json
 import traceback
 
-# Import from local package
-from app_demo.src.theme import get_seaside_theme
-from app_demo.src.core import WaterMeterSystem
+# Import from local package (using relative imports)
+from .theme import get_seaside_theme
+from .core import WaterMeterSystem
 
 
 # Initialize the Water Meter Detection System
@@ -37,6 +37,7 @@ elif os.path.exists("../assets/models/water_meter_model.pt"):
     model_path = "../assets/models/water_meter_model.pt"
 else:
     model_path = "app_demo/assets/models/water_meter_model.pt"  # Fallback
+
 
 print(f"Using model path: {model_path}")
 system = WaterMeterSystem(model_path)

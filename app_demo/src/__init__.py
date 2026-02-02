@@ -12,10 +12,10 @@ Modules:
 __version__ = "1.0.0"
 __author__ = "Bapenda Water Meter Detection Project"
 
-# Package-level imports
-from app_demo.src.core import WaterMeterSystem
-from app_demo.src.theme import get_seaside_theme
-from app_demo.src.app import demo
+# Package-level imports (using relative imports)
+from .core import WaterMeterSystem
+from .theme import get_seaside_theme
+from .app import demo
 
 __all__ = [
     "WaterMeterSystem",
