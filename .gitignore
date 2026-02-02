@@ -32,10 +32,6 @@ wheels/
 .venv
 .conda
 
-# ML/DL Specific
-runs/
-weights/
-*.pt
 *.pth
 *.onnx
 *.tflite
